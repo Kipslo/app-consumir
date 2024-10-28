@@ -16,7 +16,25 @@ class app():
     
     def main(self, page: ft.Page):
         def initpage():
-            passflet
+            def commandpage(number):
+                pass
+            page.clean()
+            limitcommands = (self.sendstr("LIMITCOMMANDS"))
+            print(limitcommands)
+            opencommands = self.sendstr("OPENCOMMANDS")
+            opencommands = opencommands.split(",")
+            print(opencommands)
+
+            
+
+            commands = ft.Row(wrap=True)
+            for i in range(int(limitcommands)):
+                if str(i) in opencommands:
+                    commands.controls.append(ft.ElevatedButton(text=str(i + 1), on_click=lambda x = i + 1: commandpage(x), color=ft.colors.BLACK, bgcolor=ft.colors.RED))
+                else:
+                    commands.controls.append(ft.ElevatedButton(text=str(i + 1), on_click=lambda x = i + 1: commandpage(x), color=ft.colors.BLACK, bgcolor=ft.colors.GREEN))
+
+
         def login(event):
             data = ""
             data = self.sendstr("LOGIN," + self.entry_name.value + "," + self.entry_password.value)
@@ -24,7 +42,7 @@ class app():
             print(data)
             if data == "YES":
                 self.name, self.password = self.entry_name.value, self.entry_password.value
-                page.clean()
+                initpage()
             elif data == "NOT":
                 self.errorlogintext.value = "NOME E/OU SENHA INCORRETOS"
                 self.errorlogintext.update()
