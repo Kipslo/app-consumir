@@ -15,9 +15,10 @@ class app():
         return data.decode()
     
     def main(self, page: ft.Page):
-        def initpage():
+        def initpage(event = 0):
             def commandpage(number):
                 pass
+            page.scroll = "always"
             page.clean()
             limitcommands = (self.sendstr("LIMITCOMMANDS"))
             print(limitcommands)
@@ -25,15 +26,16 @@ class app():
             opencommands = opencommands.split(",")
             print(opencommands)
 
-            
 
+            head = ft.Row([ft.TextButton(text="Recarregar", on_click=initpage, width=150, height=75)], width=150, alignment="top-center")
             commands = ft.Row(wrap=True)
             for i in range(int(limitcommands)):
-                if str(i) in opencommands:
-                    commands.controls.append(ft.ElevatedButton(text=str(i + 1), on_click=lambda x = i + 1: commandpage(x), color=ft.colors.BLACK, bgcolor=ft.colors.RED))
+                if str(i + 1) in opencommands:
+                    commands.controls.append(ft.ElevatedButton(text=str(i + 1), on_click=lambda y, x = i + 1: commandpage(x), color=ft.colors.BLACK, bgcolor=ft.colors.RED, width=100,height=50))
                 else:
-                    commands.controls.append(ft.ElevatedButton(text=str(i + 1), on_click=lambda x = i + 1: commandpage(x), color=ft.colors.BLACK, bgcolor=ft.colors.GREEN))
-
+                    commands.controls.append(ft.ElevatedButton(text=str(i + 1), on_click=lambda y, x = i + 1: commandpage(x), color=ft.colors.BLACK, bgcolor=ft.colors.GREEN, width=100,height=50))
+            main = ft.Column([head, commands], horizontal_alignment="center")
+            page.add(main)
 
         def login(event):
             data = ""
