@@ -18,7 +18,7 @@ class app():
         def initpage(event = 0):
             def commandpage(number):
                 page.clean()
-                page.scroll = "always"
+                page.scroll = "never"
                 page.appbar = ft.AppBar(bgcolor="#efefef", title=ft.Text("COMANDA " + str(number)) ,actions=[ft.ElevatedButton(text="Voltar", on_click=initpage)])
                 
                 products = self.sendstr("PRODUCTS," + str(number))
@@ -28,8 +28,10 @@ class app():
                 for k, i in enumerate(products):
                     products[k] = i.split("|")
                 print(products)
+                column = ft.Column(spacing=2)
                 for i in products:
-                    page.add(ft.Row(ft.Container(content=(), height=49, alignment="center"), height=50))
+                    column.controls.append(ft.Row(controls=[ft.Container(bgcolor=ft.colors.AMBER_100, height=60, expand=True), ft.Container(bgcolor=ft.colors.AMBER_100, height=60, expand=True), ft.Container(bgcolor=ft.colors.AMBER_100, height=60, expand=True)]))
+                page.add(column)
             page.appbar = ft.AppBar(bgcolor="#efefef", actions=[ft.ElevatedButton(text="Recarregar", on_click=initpage)])
             page.clean()
             page.scroll = "always"
