@@ -17,17 +17,25 @@ class app():
     def main(self, page: ft.Page):
         def initpage(event = 0):
             def commandpage(number):
+                def addpage(event):
+                    print(event)
+                    page.clean()
+                    pdt = self.sendstr("CATEGORIES")
+                    self.productsadd = []
+                    pdt = pdt.split(",")
+                    print(pdt)
+                    vaddpage = ft.Row(wrap=True)
+                    for i in pdt:
+                        pass
+                    page.add(vaddpage)
                 page.clean()
                 page.scroll = "always"
                 page.appbar = ft.AppBar(bgcolor="#efefef", title=ft.Text("COMANDA " + str(number)) ,actions=[ft.ElevatedButton(text="Voltar", on_click=initpage)])
                 
-                products = self.sendstr("PRODUCTS," + str(number))
-                print(products)
+                products = self.sendstr("PRODUCTSON," + str(number))
                 products = products.split(",")
-                print(products)
                 for k, i in enumerate(products):
                     products[k] = i.split("|")
-                print(products)
                 column = ft.Column(spacing=2)
                 column.controls.append(ft.Row(controls=[ft.Container(content=ft.Row(controls=[ft.Container(width=10, height=49), ft.Container(ft.Text("PRODUTO"), expand=True), ft.Container(ft.Text("QUANTIDADE", text_align="center"), width=100), ft.Container(ft.Text("PREÇO", text_align="center"), width=50), ft.Container(width=5, height=49)]), bgcolor=ft.colors.BLACK12, height=60, expand=True)]))
                 if products != [[""]]:
@@ -36,6 +44,7 @@ class app():
                         column.controls.append(ft.Row(controls=[ft.Container(content=ft.Row(controls=[ft.Container(width=10, height=49), ft.Container(ft.Text(i[0]), expand=True), ft.Container(ft.Text(i[1], text_align="center"), width=100), ft.Container(ft.Text(i[2], text_align="center"), width=50), ft.Container(width=5, height=49)]), bgcolor=ft.colors.BLACK12, height=60, expand=True)]))
                         total = total + float(i[2])
                     column.controls.append(ft.Row(controls=[ft.Container(content=ft.Row(controls=[ft.Container(width=10, height=49), ft.Container(ft.Text("TOTAL:"), expand=True), ft.Container(width=100), ft.Container(ft.Text(total, text_align="center"), width=50), ft.Container(width=5, height=49)]), bgcolor=ft.colors.BLACK12, height=60, expand=True)]))
+                page.bottom_appbar = ft.BottomAppBar(bgcolor=ft.colors.BLACK12, content=ft.Row(controls=[ft.ElevatedButton("ADICIONAR", on_click=addpage)]))
                 page.add(column)
             page.appbar = ft.AppBar(bgcolor="#efefef", actions=[ft.ElevatedButton(text="Recarregar", on_click=initpage)])
             page.clean()
@@ -58,7 +67,6 @@ class app():
             data = ""
             data = self.sendstr("LOGIN," + self.entry_name.value + "," + self.entry_password.value)
             data = data
-            print(data)
             if data == "YES":
                 self.name, self.password = self.entry_name.value, self.entry_password.value
                 initpage()
