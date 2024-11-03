@@ -27,8 +27,8 @@ class app():
                         productscategory[k] = i.split("|")
                     print(productscategory)
                     for i in productscategory:
-                        vcategorypage.controls.append(ft.Container(bgcolor=ft.colors.BLACK26))
-                    page.bottom_appbar = ft.BottomAppBar(content=ft.Row(controls=[ft.ElevatedButton("VOLTAR", on_click=addpage)]))
+                        vcategorypage.controls.append(ft.Container(content=[ft.CupertinoButton(text=f"{i[0]}", width=150, height=75),], bgcolor=ft.colors.BLACK12, width=150, height=75))
+                        
                     page.add(vcategorypage)
                 def addpage(event):
                     print(event)
