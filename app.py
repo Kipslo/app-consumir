@@ -17,6 +17,19 @@ class app():
     def main(self, page: ft.Page):
         def initpage(event = 0):
             def commandpage(number):
+                self.number = number
+                def categorypage(category):
+                    page.clean()
+                    productscategory = self.sendstr(f"PRODUCTSCATEGORY,{category}")
+                    productscategory = productscategory.split(",")
+                    vcategorypage = ft.Row(wrap=True, spacing=10)
+                    for k, i in enumerate(productscategory):
+                        productscategory[k] = i.split("|")
+                    print(productscategory)
+                    for i in productscategory:
+                        vcategorypage.controls.append(ft.Container(bgcolor=ft.colors.BLACK26))
+                    page.bottom_appbar = ft.BottomAppBar(content=ft.Row(controls=[ft.ElevatedButton("VOLTAR", on_click=addpage)]))
+                    page.add(vcategorypage)
                 def addpage(event):
                     print(event)
                     page.clean()
@@ -24,15 +37,17 @@ class app():
                     self.productsadd = []
                     pdt = pdt.split(",")
                     print(pdt)
-                    vaddpage = ft.Row(wrap=True)
+                    vaddpage = ft.Row(wrap=True, spacing=10)
+                    page.appbar = ft.AppBar(bgcolor="#efefef", title=ft.Text("COMANDA " + str(self.number)))
+                    page.bottom_appbar = ft.BottomAppBar(content=ft.Row(controls=[ft.ElevatedButton("VOLTAR", on_click=lambda x, y = self.number:(commandpage(y)))]))
                     for i in pdt:
-                        pass
+                        vaddpage.controls.append(ft.Container(content=ft.CupertinoButton(i, width=150, height=75, on_click=lambda x, y = i:categorypage(y)), width=150, height=75, bgcolor=ft.colors.BLACK12))
                     page.add(vaddpage)
                 page.clean()
                 page.scroll = "always"
-                page.appbar = ft.AppBar(bgcolor="#efefef", title=ft.Text("COMANDA " + str(number)) ,actions=[ft.ElevatedButton(text="Voltar", on_click=initpage)])
+                page.appbar = ft.AppBar(bgcolor="#efefef", title=ft.Text("COMANDA " + str(self.number)) ,actions=[ft.ElevatedButton(text="Voltar", on_click=initpage)])
                 
-                products = self.sendstr("PRODUCTSON," + str(number))
+                products = self.sendstr("PRODUCTSON," + str(self.number))
                 products = products.split(",")
                 for k, i in enumerate(products):
                     products[k] = i.split("|")
