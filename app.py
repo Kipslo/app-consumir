@@ -19,35 +19,50 @@ class app():
             def commandpage(number):
                 self.number = number
                 def categorypage(category):
-                    page.clean()
+                    def addproductlist(product):
+                        self.products.append([product, category])
+                        print(self.products)
+                    def sizepage(product):
+                        sizes = self.sendstr(f"SIZESCATEGORY,{product},{category}")
+                        page.clean()
+                        sizes = sizes.aplit(",")
+                        for k, i in enumerate(sizes):
+                            sizes[k] = i.split("|")
+                        page.bottom_appbar = ft.BottomAppBar(content=ft.Row(controls=[ft.ElevatedButton("VOLTAR", on_click=lambda x, y = category:categorypage(y))]))            
+                        page.add()   
                     productscategory = self.sendstr(f"PRODUCTSCATEGORY,{category}")
+                    page.clean()
                     productscategory = productscategory.split(",")
                     vcategorypage = ft.Row(wrap=True, spacing=10)
                     for k, i in enumerate(productscategory):
                         productscategory[k] = i.split("|")
-                    print(productscategory)
                     for i in productscategory:
-                        vcategorypage.controls.append(ft.Container(content=[ft.CupertinoButton(text=f"{i[0]}", width=150, height=75),], bgcolor=ft.colors.BLACK12, width=150, height=75))
-                        
+                        if i[1] != "SIZE":
+                            vcategorypage.controls.append(ft.Container(content=ft.TextButton(text=f"""{i[0]}
+
+                            {i[2]}""", width=150, height=75, on_click=lambda x, y = i[0]:addproductlist(y)), bgcolor=ft.colors.BLACK12, width=150, height=75))
+                        else:
+                            vcategorypage.controls.append(ft.Container(content=ft.TextButton(text=f"""{i[0]}
+                            
+                            """, width=150, height=75, on_click=lambda x, y = i[0]: sizepage(y)), bgcolor=ft.colors.BLACK12, width=150, height=75))
+                    page.bottom_appbar = ft.BottomAppBar(content=ft.Row(controls=[ft.ElevatedButton("VOLTAR", on_click=addpage)]))                        
                     page.add(vcategorypage)
                 def addpage(event):
-                    print(event)
-                    page.clean()
                     pdt = self.sendstr("CATEGORIES")
-                    self.productsadd = []
+                    page.clean()
+                    self.products = []
                     pdt = pdt.split(",")
-                    print(pdt)
                     vaddpage = ft.Row(wrap=True, spacing=10)
                     page.appbar = ft.AppBar(bgcolor="#efefef", title=ft.Text("COMANDA " + str(self.number)))
                     page.bottom_appbar = ft.BottomAppBar(content=ft.Row(controls=[ft.ElevatedButton("VOLTAR", on_click=lambda x, y = self.number:(commandpage(y)))]))
                     for i in pdt:
                         vaddpage.controls.append(ft.Container(content=ft.CupertinoButton(i, width=150, height=75, on_click=lambda x, y = i:categorypage(y)), width=150, height=75, bgcolor=ft.colors.BLACK12))
                     page.add(vaddpage)
-                page.clean()
                 page.scroll = "always"
                 page.appbar = ft.AppBar(bgcolor="#efefef", title=ft.Text("COMANDA " + str(self.number)) ,actions=[ft.ElevatedButton(text="Voltar", on_click=initpage)])
                 
                 products = self.sendstr("PRODUCTSON," + str(self.number))
+                page.clean()
                 products = products.split(",")
                 for k, i in enumerate(products):
                     products[k] = i.split("|")
@@ -62,12 +77,11 @@ class app():
                 page.bottom_appbar = ft.BottomAppBar(bgcolor=ft.colors.BLACK12, content=ft.Row(controls=[ft.ElevatedButton("ADICIONAR", on_click=addpage)]))
                 page.add(column)
             page.appbar = ft.AppBar(bgcolor="#efefef", actions=[ft.ElevatedButton(text="Recarregar", on_click=initpage)])
-            page.clean()
             page.scroll = "always"
             limitcommands = (self.sendstr("LIMITCOMMANDS"))
             opencommands = self.sendstr("OPENCOMMANDS")
+            page.clean()
             opencommands = opencommands.split(",")
-
             commands = ft.Row(wrap=True)
             for i in range(int(limitcommands)):
                 n = i + 1
@@ -76,6 +90,7 @@ class app():
                 else:
                     commands.controls.append(ft.ElevatedButton(text=str(n), on_click=lambda y, x = i + 1: commandpage(x), color=ft.colors.BLACK, bgcolor=ft.colors.GREEN, width=100,height=50))
             main = ft.Column([commands], horizontal_alignment="center")
+            page.bottom_appbar = None
             page.add(main)
 
         def login(event):
