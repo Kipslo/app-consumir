@@ -5,7 +5,7 @@ class app():
         ft.app(target=self.main)
     def sendstr(self, data):
         self.PORT = 55261
-        self.HOST = "192.168.0.85"
+        self.HOST = "26.108.30.186"
         self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.s.connect((self.HOST, self.PORT))
         self.s.sendall(str.encode(data))
@@ -19,7 +19,46 @@ class app():
             def commandpage(number):
                 self.command = number
                 def reviewpage(event = 0):
+                    def send(i):
+                        data = "INSERT," + self.name + "," + self.password
+                        for i in self.products:
+                            name, category, qtd, texts = i
+                            
+                    def editt(i):
+                        self.text = []
+                        edit(i)
                     def edit(i):
+                        def addtext(event):
+                            print(entry.value)
+                            temp = entry.value
+                            self.text.append(temp)
+                            print(self.text)
+                            edit(i)
+                        def confirm(event):
+                            for j in self.text:
+                                self.products[i][3].append(j)
+                            reviewpage()
+                        page.clean()
+                        page.bottom_appbar = ft.BottomAppBar(content=ft.Row(controls=[ft.ElevatedButton("CANCELAR", on_click=reviewpage), ft.Container(expand=True), ft.ElevatedButton("CONFIRMAR", on_click=confirm)]))
+                        page.appbar = ft.AppBar()
+                        
+                        page.add(ft.Row(controls=[ft.Container(ft.Row(controls=[ft.Container(width=10), ft.Container(content=ft.Text(self.products[i][0]), expand=True), ft.Container(content=ft.Text(self.products[i][1]), width=100), ft.Container(ft.Text(self.products[i][2]), width=50)]), expand=True, bgcolor=ft.colors.BLACK12, height=50)]))
+
+                        entry = ft.TextField(expand=True, height=50)
+                        buttonadd = ft.CupertinoFilledButton(on_click=addtext, width=75, height=50, text="Add")
+
+                        for j in self.products[i][3]:
+                            print(j)
+                            page.add(ft.Row(height=5))
+                            page.add(ft.Row(controls=[ft.Container(content=ft.Row([ft.Container(width=10), ft.Container(ft.Text(j))]), expand=True, bgcolor=ft.colors.BLACK12)], height=50))
+                    
+                        for j in self.text:
+                            print(j)
+                            page.add(ft.Row(height=5))
+                            page.add(ft.Row(controls=[ft.Container(content=ft.Row([ft.Container(width=10), ft.Container(ft.Text(j))]), expand=True, bgcolor=ft.colors.BLACK12)], height=50))
+
+                        page.add(ft.Row(height=10))
+                        page.add(ft.Row(controls=[entry, buttonadd]))
 
                     def add1(i):
                         self.products[i][2] = self.products[i][2] + 1
@@ -33,16 +72,16 @@ class app():
                     page.clean()
                     rows = []
                     page.spacing = 0
-                    page.bottom_appbar = ft.BottomAppBar(content=ft.Row(controls=[ft.ElevatedButton("VOLTAR", on_click=addpage), ft.Container(expand=True), ft.ElevatedButton("ENVIAR")]))
+                    page.appbar = ft.AppBar(bgcolor="#efefef", title=ft.Text("Comanda " + str(self.command)))
+                    page.bottom_appbar = ft.BottomAppBar(content=ft.Row(controls=[ft.ElevatedButton("VOLTAR", on_click=addpage), ft.Container(expand=True), ft.ElevatedButton("ENVIAR", on_click=lambda x, y = i:send)]))
                     print(self.products)
                     rows.append(ft.Row(controls=[ft.Container(content=ft.Row([ft.Container(expand=True, width=100, height=49, content=ft.Text("PRODUTO", text_align="center")), ft.Container(expand=True, width=100, height=49, content=ft.Text("CATEGORIA", text_align="center")), ft.Container(expand=True, width=30, height=49, content=ft.Text("QTD.", text_align="center"))]), bgcolor=ft.colors.BLACK12, height=50, expand=True)]))
                     
                     rows.append(ft.Row(height=8))
                     for k, i in enumerate(self.products):
-                        rows.append(ft.Row(height=50, controls=[ft.Container(content=ft.Row([ft.Container(width=100, height=50, content=ft.Text(i[0], text_align="center")), ft.Container(expand=True, width=100, height=49, content=ft.Text(i[1], text_align="center")), ft.Container(expand=True, width=30, height=49, content=ft.Text(i[2], text_align="center"))]), bgcolor=ft.colors.BLACK12, height=
-                        50, expand=True)]))
+                        rows.append(ft.Row(height=50, controls=[ft.Container(content=ft.Row([ft.Container(width=100, height=50, content=ft.Text(i[0], text_align="center")), ft.Container(expand=True, width=100, height=49, content=ft.Text(i[1], text_align="center")), ft.Container(expand=True, width=30, height=49, content=ft.Text(i[2], text_align="center"))]), bgcolor=ft.colors.BLACK12, height=50, expand=True)]))
 
-                        rows.append(ft.Row(height=50, controls=[ft.Container(content=ft.Row(controls=[ft.Container(content=ft.CupertinoButton(text="-1", on_click=lambda x, y = k:remove1(y)), expand=True), ft.Container(content=ft.CupertinoButton("+1", on_click=lambda x, y = k:add1(y)), expand=True), ft.Container(content=ft.CupertinoButton("EDITAR"), expand=True), ft.Container(content=ft.CupertinoButton("EXCLUIR", on_click=lambda x, y = k:delete(y)), expand=True)], height=50), height=50, bgcolor=ft.colors.BLACK12, expand=True)]))
+                        rows.append(ft.Row(height=50, controls=[ft.Container(content=ft.Row(controls=[ft.Container(content=ft.CupertinoButton(text="-1", on_click=lambda x, y = k:remove1(y)), expand=True), ft.Container(content=ft.CupertinoButton("+1", on_click=lambda x, y = k:add1(y)), expand=True), ft.Container(content=ft.CupertinoButton("EDITAR", on_click=lambda x, y = k:editt(y)), expand=True), ft.Container(content=ft.CupertinoButton("EXCLUIR", on_click=lambda x, y = k:delete(y)), expand=True)], height=50), height=50, bgcolor=ft.colors.BLACK12, expand=True)]))
 
                         rows.append(ft.Row(height=5))
 
@@ -68,7 +107,7 @@ class app():
                     page.bottom_appbar = ft.BottomAppBar(content=ft.Row(controls=[ft.ElevatedButton("VOLTAR", on_click=addpage), ft.Container(expand=True), ft.ElevatedButton("REVISAR", on_click=reviewpage)]))                        
                     page.add(vcategorypage)    
                 def addproductlist(product):
-                    self.products.append([product, self.category, 1, ""])
+                    self.products.append([product, self.category, 1, []])
                 def addpage(event):
                     pdt = self.sendstr("CATEGORIES")
                     page.clean()
