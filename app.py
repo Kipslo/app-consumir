@@ -20,6 +20,7 @@ class app():
                 self.command = number
                 def reviewpage(event = 0):
                     def send():
+                        tem = ""
                         for i in self.products:
                             name, category, unitprice, qtd, texts, tipe = i
                             print(tipe)
@@ -40,7 +41,13 @@ class app():
                         
                             print(data)
                             t = self.sendstr(data)
+                            if t != "Y":
+                                tem = t
                         del t
+                        if tem == "":
+                            alert = ft.Banner(bgcolor=ft.colors.RED_300, content=ft.Text("PEDIDO ENVIADO COM SUCESSO", color=ft.colors.BLACK), actions=[ft.TextButton("OK", on_click=lambda x:page.close(alert))])
+                        page.open(alert)
+                        initpage()
                     def editt(i):
                         self.text = []
                         edit(i)
@@ -81,7 +88,8 @@ class app():
                         self.products[i][3] = self.products[i][3] + 1
                         reviewpage()
                     def remove1(i):
-                        self.products[i][3] = self.products[i][3] - 1
+                        if self.products[i][3] > 1:
+                            self.products[i][3] = self.products[i][3] - 1
                         reviewpage()
                     def delete(i):
                         del self.products[i]
@@ -95,7 +103,6 @@ class app():
                     rows.append(ft.Row(controls=[ft.Container(content=ft.Row([ft.Container(expand=True, width=100, height=49, content=ft.Text("PRODUTO", text_align="center")), ft.Container(expand=True, width=100, height=49, content=ft.Text("CATEGORIA", text_align="center")), ft.Container(expand=True, width=30, height=49, content=ft.Text("QTD.", text_align="center"))]), bgcolor=ft.colors.BLACK12, height=50, expand=True)]))
                     
                     rows.append(ft.Row(height=8))
-                    print(self.products)
                     for k, i in enumerate(self.products):
                         rows.append(ft.Row(height=50, controls=[ft.Container(content=ft.Row([ft.Container(width=100, height=50, content=ft.Text(i[0], text_align="center")), ft.Container(expand=True, width=100, height=49, content=ft.Text(i[1], text_align="center")), ft.Container(expand=True, width=30, height=49, content=ft.Text(i[3], text_align="center"))]), bgcolor=ft.colors.BLACK12, height=50, expand=True)]))
 
@@ -113,15 +120,16 @@ class app():
                     vcategorypage = ft.Row(wrap=True, spacing=10)
                     for k, i in enumerate(productscategory):
                         productscategory[k] = i.split("|")
-                    for i in productscategory:
-                        if i[1] != "SIZE":
-                            vcategorypage.controls.append(ft.Container(content=ft.TextButton(text=f"""{i[0]}
+                    if productscategory[0][0] != '':
+                        for i in productscategory:
+                            if i[1] != "SIZE":
+                                vcategorypage.controls.append(ft.Container(content=ft.TextButton(text=f"""{i[0]}
 
-                            {i[2]}""", width=150, height=75, on_click=lambda x, y = i[0], z = i[2], a = i[1]:addproductlist(y, z, a)), bgcolor=ft.colors.BLACK12, width=150, height=75))
-                        else: 
-                            vcategorypage.controls.append(ft.Container(content=ft.TextButton(text=f"""{i[0]}
+                                {i[2]}""", width=150, height=75, on_click=lambda x, y = i[0], z = i[2], a = i[1]:addproductlist(y, z, a)), bgcolor=ft.colors.BLACK12, width=150, height=75))
+                            else: 
+                                vcategorypage.controls.append(ft.Container(content=ft.TextButton(text=f"""{i[0]}
                             
-                            """, width=150, height=75, on_click=lambda x, y = i[0]: sizepage(y)), bgcolor=ft.colors.BLACK12, width=150, height=75))
+                                """, width=150, height=75, on_click=lambda x, y = i[0]: sizepage(y)), bgcolor=ft.colors.BLACK12, width=150, height=75))
                     page.bottom_appbar = ft.BottomAppBar(content=ft.Row(controls=[ft.ElevatedButton("VOLTAR", on_click=addpage), ft.Container(expand=True), ft.ElevatedButton("REVISAR", on_click=reviewpage)]))                        
                     page.add(vcategorypage)    
                 def addproductlist(product, unitprice, tipe):
