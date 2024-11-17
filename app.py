@@ -9,7 +9,7 @@ class app():
         self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.s.connect((self.HOST, self.PORT))
         self.s.sendall(str.encode(data))
-        data = self.s.recv(1024)
+        data = self.s.recv(2024)
         self.s.shutdown(socket.SHUT_RDWR)
         self.s.close()
         return data.decode()
@@ -19,11 +19,28 @@ class app():
             def commandpage(number):
                 self.command = number
                 def reviewpage(event = 0):
-                    def send(i):
-                        data = "INSERT," + self.name + "," + self.password
+                    def send():
                         for i in self.products:
-                            name, category, qtd, texts = i
-                            
+                            name, category, unitprice, qtd, texts, tipe = i
+                            print(tipe)
+                            data = f"INSERT,{self.command},{self.name},{self.password},"
+                            if texts == "":
+                                data = data + f"{name}.-{category}.-{unitprice}.-{qtd}.-{tipe}"
+                            else:
+                                data = data + f"{name}.-{category}.-{unitprice}.-{qtd}"
+                                n = 0
+                                for j in texts:
+                                    if n == 0:
+                                        data = data + f".-{j}"
+                                        n = 1
+                                    else:
+                                        data = data + f".={j}"
+                                data = data + f".-{tipe}"
+                                
+                        
+                            print(data)
+                            t = self.sendstr(data)
+                        del t
                     def editt(i):
                         self.text = []
                         edit(i)
@@ -36,7 +53,7 @@ class app():
                             edit(i)
                         def confirm(event):
                             for j in self.text:
-                                self.products[i][3].append(j)
+                                self.products[i][4].append(j)
                             reviewpage()
                         page.clean()
                         page.bottom_appbar = ft.BottomAppBar(content=ft.Row(controls=[ft.ElevatedButton("CANCELAR", on_click=reviewpage), ft.Container(expand=True), ft.ElevatedButton("CONFIRMAR", on_click=confirm)]))
@@ -47,7 +64,7 @@ class app():
                         entry = ft.TextField(expand=True, height=50)
                         buttonadd = ft.CupertinoFilledButton(on_click=addtext, width=75, height=50, text="Add")
 
-                        for j in self.products[i][3]:
+                        for j in self.products[i][4]:
                             print(j)
                             page.add(ft.Row(height=5))
                             page.add(ft.Row(controls=[ft.Container(content=ft.Row([ft.Container(width=10), ft.Container(ft.Text(j))]), expand=True, bgcolor=ft.colors.BLACK12)], height=50))
@@ -61,10 +78,10 @@ class app():
                         page.add(ft.Row(controls=[entry, buttonadd]))
 
                     def add1(i):
-                        self.products[i][2] = self.products[i][2] + 1
+                        self.products[i][3] = self.products[i][3] + 1
                         reviewpage()
                     def remove1(i):
-                        self.products[i][2] = self.products[i][2] - 1
+                        self.products[i][3] = self.products[i][3] - 1
                         reviewpage()
                     def delete(i):
                         del self.products[i]
@@ -73,13 +90,14 @@ class app():
                     rows = []
                     page.spacing = 0
                     page.appbar = ft.AppBar(bgcolor="#efefef", title=ft.Text("Comanda " + str(self.command)))
-                    page.bottom_appbar = ft.BottomAppBar(content=ft.Row(controls=[ft.ElevatedButton("VOLTAR", on_click=addpage), ft.Container(expand=True), ft.ElevatedButton("ENVIAR", on_click=lambda x, y = i:send)]))
+                    page.bottom_appbar = ft.BottomAppBar(content=ft.Row(controls=[ft.ElevatedButton("VOLTAR", on_click=addpage), ft.Container(expand=True), ft.ElevatedButton("ENVIAR", on_click=lambda x:send())]))
                     print(self.products)
                     rows.append(ft.Row(controls=[ft.Container(content=ft.Row([ft.Container(expand=True, width=100, height=49, content=ft.Text("PRODUTO", text_align="center")), ft.Container(expand=True, width=100, height=49, content=ft.Text("CATEGORIA", text_align="center")), ft.Container(expand=True, width=30, height=49, content=ft.Text("QTD.", text_align="center"))]), bgcolor=ft.colors.BLACK12, height=50, expand=True)]))
                     
                     rows.append(ft.Row(height=8))
+                    print(self.products)
                     for k, i in enumerate(self.products):
-                        rows.append(ft.Row(height=50, controls=[ft.Container(content=ft.Row([ft.Container(width=100, height=50, content=ft.Text(i[0], text_align="center")), ft.Container(expand=True, width=100, height=49, content=ft.Text(i[1], text_align="center")), ft.Container(expand=True, width=30, height=49, content=ft.Text(i[2], text_align="center"))]), bgcolor=ft.colors.BLACK12, height=50, expand=True)]))
+                        rows.append(ft.Row(height=50, controls=[ft.Container(content=ft.Row([ft.Container(width=100, height=50, content=ft.Text(i[0], text_align="center")), ft.Container(expand=True, width=100, height=49, content=ft.Text(i[1], text_align="center")), ft.Container(expand=True, width=30, height=49, content=ft.Text(i[3], text_align="center"))]), bgcolor=ft.colors.BLACK12, height=50, expand=True)]))
 
                         rows.append(ft.Row(height=50, controls=[ft.Container(content=ft.Row(controls=[ft.Container(content=ft.CupertinoButton(text="-1", on_click=lambda x, y = k:remove1(y)), expand=True), ft.Container(content=ft.CupertinoButton("+1", on_click=lambda x, y = k:add1(y)), expand=True), ft.Container(content=ft.CupertinoButton("EDITAR", on_click=lambda x, y = k:editt(y)), expand=True), ft.Container(content=ft.CupertinoButton("EXCLUIR", on_click=lambda x, y = k:delete(y)), expand=True)], height=50), height=50, bgcolor=ft.colors.BLACK12, expand=True)]))
 
@@ -99,15 +117,15 @@ class app():
                         if i[1] != "SIZE":
                             vcategorypage.controls.append(ft.Container(content=ft.TextButton(text=f"""{i[0]}
 
-                            {i[2]}""", width=150, height=75, on_click=lambda x, y = i[0]:addproductlist(y)), bgcolor=ft.colors.BLACK12, width=150, height=75))
-                        else:
+                            {i[2]}""", width=150, height=75, on_click=lambda x, y = i[0], z = i[2], a = i[1]:addproductlist(y, z, a)), bgcolor=ft.colors.BLACK12, width=150, height=75))
+                        else: 
                             vcategorypage.controls.append(ft.Container(content=ft.TextButton(text=f"""{i[0]}
                             
                             """, width=150, height=75, on_click=lambda x, y = i[0]: sizepage(y)), bgcolor=ft.colors.BLACK12, width=150, height=75))
                     page.bottom_appbar = ft.BottomAppBar(content=ft.Row(controls=[ft.ElevatedButton("VOLTAR", on_click=addpage), ft.Container(expand=True), ft.ElevatedButton("REVISAR", on_click=reviewpage)]))                        
                     page.add(vcategorypage)    
-                def addproductlist(product):
-                    self.products.append([product, self.category, 1, []])
+                def addproductlist(product, unitprice, tipe):
+                    self.products.append([product, self.category, unitprice, 1, [], tipe])
                 def addpage(event):
                     pdt = self.sendstr("CATEGORIES")
                     page.clean()
@@ -128,8 +146,8 @@ class app():
                     sizesbutton = ft.Row(wrap=True, spacing=10)
                     for i in sizes:
                         sizesbutton.controls.append(ft.Container(content=ft.TextButton(text=f"""{i[0]}
-            
-                        {i[1]}""", width=150, height=75, on_click=lambda x, y = product + f" ({i[0]})":addproductlist(y)), bgcolor=ft.colors.BLACK12, width=150, height=75))
+                        
+                        {i[1]}""", width=150, height=75, on_click=lambda x, y = product + f" ({i[0]})", z = i[1], a = "SIZE":addproductlist(y, z, a)), bgcolor=ft.colors.BLACK12, width=150, height=75))
 
                     page.add(sizesbutton)
                 page.scroll = "always"
