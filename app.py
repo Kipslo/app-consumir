@@ -24,7 +24,7 @@ class app():
                         for i in self.products:
                             name, category, unitprice, qtd, texts, tipe = i
                             print(tipe)
-                            data = f"INSERT,{self.command},{self.name},{self.password},"
+                            data = f"INSERT,={self.command},={self.name},={self.password},="
                             if texts == "":
                                 data = data + f"{name}.-{category}.-{unitprice}.-{qtd}.-{tipe}"
                             else:
@@ -114,9 +114,9 @@ class app():
                         page.add(i)
                 def categorypage(category):
                     self.category = category
-                    productscategory = self.sendstr(f"PRODUCTSCATEGORY,{category}")
+                    productscategory = self.sendstr(f"PRODUCTSCATEGORY,={category}")
                     page.clean()
-                    productscategory = productscategory.split(",")
+                    productscategory = productscategory.split(",=")
                     vcategorypage = ft.Row(wrap=True, spacing=10)
                     for k, i in enumerate(productscategory):
                         productscategory[k] = i.split("|")
@@ -137,7 +137,7 @@ class app():
                 def addpage(event):
                     pdt = self.sendstr("CATEGORIES")
                     page.clean()
-                    pdt = pdt.split(",")
+                    pdt = pdt.split(",=")
                     vaddpage = ft.Row(wrap=True, spacing=10)
                     page.appbar = ft.AppBar(bgcolor="#efefef", title=ft.Text("COMANDA " + str(self.command)))
                     page.bottom_appbar = ft.BottomAppBar(content=ft.Row(controls=[ft.ElevatedButton("VOLTAR", on_click=lambda x, y = self.command:(commandpage(y))), ft.Container(expand=True), ft.ElevatedButton("REVISAR", on_click=reviewpage)]))
@@ -145,9 +145,9 @@ class app():
                         vaddpage.controls.append(ft.Container(content=ft.CupertinoButton(i, width=150, height=75, on_click=lambda x, y = i:categorypage(y)), width=150, height=75, bgcolor=ft.colors.BLACK12))
                     page.add(vaddpage)
                 def sizepage(product):
-                    sizes = self.sendstr(f"SIZESCATEGORY,{product},{self.category}")
+                    sizes = self.sendstr(f"SIZESCATEGORY,={product},={self.category}")
                     page.clean()
-                    sizes = sizes.split(",")
+                    sizes = sizes.split(",=")
                     for k, i in enumerate(sizes):
                         sizes[k] = i.split("|")
                     page.bottom_appbar = ft.BottomAppBar(content=ft.Row(controls=[ft.ElevatedButton("VOLTAR", on_click=lambda x, y = self.category:categorypage(y)), ft.Container(expand=True), ft.ElevatedButton("REVISAR", on_click=reviewpage)]))
@@ -162,9 +162,9 @@ class app():
                 self.products = []
                 page.appbar = ft.AppBar(bgcolor="#efefef", title=ft.Text("COMANDA " + str(self.command)) ,actions=[ft.ElevatedButton(text="Voltar", on_click=initpage)])
                 
-                products = self.sendstr("PRODUCTSON," + str(self.command))
+                products = self.sendstr("PRODUCTSON,=" + str(self.command))
                 page.clean()
-                products = products.split(",")
+                products = products.split(",=")
                 for k, i in enumerate(products):
                     products[k] = i.split("|")
                 column = ft.Column(spacing=2)
@@ -182,7 +182,7 @@ class app():
             limitcommands = (self.sendstr("LIMITCOMMANDS"))
             opencommands = self.sendstr("OPENCOMMANDS")
             page.clean()
-            opencommands = opencommands.split(",")
+            opencommands = opencommands.split(",=")
             commands = ft.Row(wrap=True)
             for i in range(int(limitcommands)):
                 n = i + 1
@@ -196,7 +196,7 @@ class app():
 
         def login(event):
             data = ""
-            data = self.sendstr("LOGIN," + self.entry_name.value + "," + self.entry_password.value)
+            data = self.sendstr("LOGIN,=" + self.entry_name.value + ",=" + self.entry_password.value)
             data = data
             if data == "YES":
                 self.name, self.password = self.entry_name.value, self.entry_password.value
