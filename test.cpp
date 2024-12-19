@@ -2,8 +2,11 @@
 
 using namespace std;
 
+int cont(int x = 3, int y = 2){
+    return x + y;
+}
+
 int main(){
-    cout << "hello\n";
-    system("pause");
-    return 1;
+    cout << cont();
+    return 0;
 }
