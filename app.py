@@ -23,7 +23,6 @@ class app():
                         tem = ""
                         for i in self.products:
                             name, category, unitprice, qtd, texts, tipe = i
-                            print(tipe)
                             data = f"INSERT,={self.command},={self.name},={self.password},="
                             if texts == "":
                                 data = data + f"{name}.-{category}.-{unitprice}.-{qtd}.-{tipe}"
@@ -47,29 +46,26 @@ class app():
                         page.open(alert)
                         initpage()
                     def editt(i):
-                        self.text = []
+                        self.text = self.products[i][4]
                         edit(i)
                     def edit(i):
                         def addtext(event):
-                            print(entry.value)
                             temp = entry.value
                             self.text.append(temp)
                             edit(i)
                         def confirm(event):
-                            for j in self.text:
-                                self.products[i][4].append(j)
+                            self.products[i][4] = self.text
                             reviewpage()
                         def edittext(event, x):
-                            print(event.data)
                             if event.data == "true":
-                                print("add")
                                 self.text.append(x)
                             else:
-                                print("remove")
                                 for k, i in enumerate(self.text):
                                     if i == x:
                                         del self.text[k]
-                            print(self.text)
+                        def delete(x):
+                            del self.text[x]
+                            edit(i)
                         page.clean()
                         page.bottom_appbar = ft.BottomAppBar(content=ft.Row(controls=[ft.ElevatedButton("CANCELAR", on_click=reviewpage), ft.Container(expand=True), ft.ElevatedButton("CONFIRMAR", on_click=confirm)]))
                         page.appbar = ft.AppBar()
@@ -81,7 +77,6 @@ class app():
 
                         predefnotes = self.sendstr(f"GETNOTES,={self.products[i][1]}")
                         predefnotes = predefnotes.split(".=")
-                        print(self.text)
                         if predefnotes[0] != '':
                             for j in predefnotes:
                                 page.add(ft.Row(height=5))
@@ -91,22 +86,22 @@ class app():
                                         page.add(ft.Row(controls=[ft.Container(content=ft.Row([ft.Container(width=10), ft.Checkbox(label=j, value="true", on_change=lambda n, x = j:edittext(n, x))], height=50))]))
                                         num = 1
                                         break
+                                for p in self.products[i][4]:
+                                    if p == j and num == 0:
+                                        page.add(ft.Row(controls=[ft.Container(content=ft.Row([ft.Container(width=10), ft.Checkbox(label=j, value="true", on_change=lambda n, x = j:edittext(n, x))], height=50))]))
+                                        num = 1
+                                        break
                                 if num == 0:
                                     page.add(ft.Row(controls=[ft.Container(content=ft.Row([ft.Container(width=10), ft.Checkbox(label=j, on_change=lambda n, x = j:edittext(n, x))], height=50))]))
 
-                        for j in self.products[i][4]:
-                            
-                                page.add(ft.Row(height=5))
-                                page.add(ft.Row(controls=[ft.Container(content=ft.Row([ft.Container(width=10), ft.Container(ft.Text(j))]), expand=True, bgcolor=ft.colors.BLACK12)], height=50))
-                                
-                        for j in self.text:
+                        for k, j in enumerate(self.text):
                             t = True
                             for p in predefnotes:
                                 if p == j:
                                     t = False
                             if t:
                                 page.add(ft.Row(height=5))
-                                page.add(ft.Row(controls=[ft.Container(content=ft.Row([ft.Container(width=10), ft.Container(ft.Text(j))]), expand=True, bgcolor=ft.colors.BLACK12)], height=50))
+                                page.add(ft.Row(controls=[ft.Container(content=ft.Row([ft.Container(width=10), ft.Container(ft.Text(j), expand=True), ft.CupertinoButton(text="DELETAR", on_click=lambda x, y = k:delete(y), width=100)]), expand=True, bgcolor=ft.colors.BLACK12)], height=50))
 
                         page.add(ft.Row(height=10))
                         page.add(ft.Row(controls=[entry, buttonadd]))
