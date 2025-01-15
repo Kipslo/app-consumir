@@ -5,7 +5,6 @@ class app():
         ft.app(target=self.main)
     def sendstr(self, data):
         self.PORT = 55261
-        self.HOST = "26.108.30.186"
         self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.s.connect((self.HOST, self.PORT))
         self.s.sendall(str.encode(data))
@@ -220,9 +219,11 @@ class app():
 
         def login(event):
             data = ""
+            self.HOST = self.entry_ip.value
             data = self.sendstr("LOGIN,=" + self.entry_name.value + ",=" + self.entry_password.value)
             data = data
             if data == "YES":
+                page.client_storage.set("IPCONSUMER", self.HOST)
                 self.name, self.password = self.entry_name.value, self.entry_password.value
                 initpage()
             elif data == "NOT":
@@ -239,9 +240,13 @@ class app():
 
         self.entry_password = ft.TextField(label="SENHA", width=350)
 
+        self.entry_ip = ft.TextField(label="IP", width=350)
+
         self.errorlogintext = ft.Text(value="", width=350, height=50, size=22)
 
-        conteiner = ft.Container(content=ft.Column([ft.Container(width=500, height=100), self.entry_name, self.entry_password, ft.ElevatedButton("LOGIN", width=350, height=50, on_click=login), self.errorlogintext], horizontal_alignment= "center"), width=500, height=500, bgcolor=ft.colors.BLACK12)
+        self.entry_ip.value = page.client_storage.get("IPCONSUMER")
+
+        conteiner = ft.Container(content=ft.Column([ft.Container(width=500, height=100), self.entry_name, self.entry_password, self.entry_ip, ft.ElevatedButton("LOGIN", width=350, height=50, on_click=login), self.errorlogintext], horizontal_alignment= "center"), width=500, height=500, bgcolor=ft.colors.BLACK12)
         
 
 
