@@ -21,10 +21,10 @@ class app():
                     def send():
                         tem = ""
                         for i in self.products:
-                            name, category, unitprice, qtd, texts, tipe = i
+                            name, category, unitprice, qtd, texts, tipe, prynter = i
                             data = f"INSERT,={self.command},={self.name},={self.password},="
                             if texts == "":
-                                data = data + f"{name}.-{category}.-{unitprice}.-{qtd}.-{tipe}"
+                                data = data + f"{name}.-{category}.-{unitprice}.-{qtd}.-{tipe}.-{prynter}"
                             else:
                                 data = data + f"{name}.-{category}.-{unitprice}.-{qtd}"
                                 n = 0
@@ -34,7 +34,7 @@ class app():
                                         n = 1
                                     else:
                                         data = data + f".={j}"
-                                data = data + f".-{tipe}"
+                                data = data + f".-{tipe}.-{prynter}"
                                 
                             t = self.sendstr(data)
                             if t != "Y":
@@ -148,15 +148,15 @@ class app():
                             if i[1] != "SIZE":
                                 vcategorypage.controls.append(ft.Container(content=ft.TextButton(text=f"""{i[0]}
 
-                                {i[2]}""", width=150, height=75, on_click=lambda x, y = i[0], z = i[2], a = i[1]:addproductlist(y, z, a)), bgcolor=ft.colors.BLACK12, width=150, height=75))
+                                {i[2]}""", width=150, height=75, on_click=lambda x, y = i[0], z = i[2], a = i[1], b = i[3]:addproductlist(y, z, a, b)), bgcolor=ft.colors.BLACK12, width=150, height=75))
                             else: 
                                 vcategorypage.controls.append(ft.Container(content=ft.TextButton(text=f"""{i[0]}
                             
                                 """, width=150, height=75, on_click=lambda x, y = i[0]: sizepage(y)), bgcolor=ft.colors.BLACK12, width=150, height=75))
                     page.bottom_appbar = ft.BottomAppBar(content=ft.Row(controls=[ft.ElevatedButton("VOLTAR", on_click=addpage), ft.Container(expand=True), ft.ElevatedButton("REVISAR", on_click=reviewpage)]))                        
                     page.add(vcategorypage)    
-                def addproductlist(product, unitprice, tipe):
-                    self.products.append([product, self.category, unitprice, 1, [], tipe])
+                def addproductlist(product, unitprice, tipe, prynter):
+                    self.products.append([product, self.category, unitprice, 1, [], tipe, prynter])
                 def addpage(event):
                     pdt = self.sendstr("CATEGORIES")
                     page.clean()
