@@ -223,6 +223,7 @@ class app():
             data = self.sendstr("LOGIN,=" + self.entry_name.value + ",=" + self.entry_password.value)
             data = data
             if data == "YES":
+                page.client_storage.set("NAMECONSUMER", self.entry_name.value)
                 page.client_storage.set("IPCONSUMER", self.HOST)
                 self.name, self.password = self.entry_name.value, self.entry_password.value
                 initpage()
@@ -236,7 +237,7 @@ class app():
 
         page.title = "APP"
 
-        self.entry_name = ft.TextField(label="NOME", width=350)
+        self.entry_name = ft.TextField(label="NOME", width=350, value=page.client_storage.get("NAMECONSUMER"))
 
         self.entry_password = ft.TextField(label="SENHA", width=350)
 
