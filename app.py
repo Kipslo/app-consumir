@@ -243,15 +243,15 @@ class app():
 
         self.entry_ip = ft.TextField(label="IP", width=350)
 
-        self.errorlogintext = ft.Text(value="", width=350, height=50, size=22)
+        self.errorlogintext = ft.Text(value="", width=350, height=100, size=18, text_align="center")
 
         self.entry_ip.value = page.client_storage.get("IPCONSUMER")
 
-        conteiner = ft.Container(content=ft.Column([ft.Container(width=500, height=100), self.entry_name, self.entry_password, self.entry_ip, ft.ElevatedButton("LOGIN", width=350, height=50, on_click=login), self.errorlogintext], horizontal_alignment= "center"), width=500, height=500, bgcolor=ft.colors.BLACK12)
+        container = ft.Container(content=ft.Column([ft.Container(width=500, height=100), self.entry_name, self.entry_password, self.entry_ip, ft.ElevatedButton("LOGIN", width=350, height=50, on_click=login), self.errorlogintext], horizontal_alignment= "center"), width=500, height=500, bgcolor="#ffffff")
         
 
 
-        loginarea = ft.Column([conteiner], horizontal_alignment="center")
+        loginarea = ft.Column([container], horizontal_alignment="center")
 
         page.add(loginarea)
 app()
