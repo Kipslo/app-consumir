@@ -152,7 +152,7 @@ class app():
                             else: 
                                 vcategorypage.controls.append(ft.Container(content=ft.TextButton(text=f"""{i[0]}
                             
-                                """, width=150, height=75, on_click=lambda x, y = i[0]: sizepage(y)), bgcolor=ft.colors.BLACK12, width=150, height=75))
+                                """, width=150, height=75, on_click=lambda x, y = i[0], z = i[3]: sizepage(y, z)), bgcolor=ft.colors.BLACK12, width=150, height=75))
                     page.bottom_appbar = ft.BottomAppBar(content=ft.Row(controls=[ft.ElevatedButton("VOLTAR", on_click=addpage), ft.Container(expand=True), ft.ElevatedButton("REVISAR", on_click=reviewpage)]))                        
                     page.add(vcategorypage)    
                 def addproductlist(product, unitprice, tipe, prynter):
@@ -167,7 +167,7 @@ class app():
                     for i in pdt:
                         vaddpage.controls.append(ft.Container(content=ft.CupertinoButton(i, width=150, height=75, on_click=lambda x, y = i:categorypage(y)), width=150, height=75, bgcolor=ft.colors.BLACK12))
                     page.add(vaddpage)
-                def sizepage(product):
+                def sizepage(product, prynter):
                     sizes = self.sendstr(f"SIZESCATEGORY,={product},={self.category}")
                     page.clean()
                     sizes = sizes.split(",=")
@@ -178,7 +178,7 @@ class app():
                     for i in sizes:
                         sizesbutton.controls.append(ft.Container(content=ft.TextButton(text=f"""{i[0]}
                         
-                        {i[1]}""", width=150, height=75, on_click=lambda x, y = product + f" ({i[0]})", z = i[1], a = "SIZE":addproductlist(y, z, a)), bgcolor=ft.colors.BLACK12, width=150, height=75))
+                        {i[1]}""", width=150, height=75, on_click=lambda x, y = product + f" ({i[0]})", z = i[1], a = "SIZE", b = prynter:addproductlist(y, z, a, b)), bgcolor=ft.colors.BLACK12, width=150, height=75))
 
                     page.add(sizesbutton)
                 page.scroll = "always"
