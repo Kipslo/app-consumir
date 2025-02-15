@@ -181,6 +181,29 @@ class app():
                         {i[1]}""", width=150, height=75, on_click=lambda x, y = product + f" ({i[0]})", z = i[1], a = "SIZE":addproductlist(y, z, a)), bgcolor="#c4c4c3", width=150, height=75))
 
                     page.add(sizesbutton)
+                def addclientpage(event):
+                    def addmale():
+                        maleqtd.value = maleqtd.value + 1
+                    def removemale():
+                        if maleqtd.value > 0: 
+                            maleqtd.value = maleqtd.value - 1
+                    def addfemale():
+                        femaleqtd.value = femaleqtd + 1
+                    def removefemale():
+                        if femaleqtd.value > 0:
+                            femaleqtd.value = femaleqtd.value - 1
+                    page.clean()
+                    page.bottom_appbar = []
+                    page.appbar = ft.AppBar(bgcolor="#efefef", title=ft.Text("COMANDA " + str(self.command)) ,actions=[ft.ElevatedButton(text="Voltar", on_click=lambda x, y = number:commandpage(y))])
+
+                    idclient = ft.TextField(expand=True, value=0)
+                    nameclient = ft.TextField(expand=True, value=0)
+                    maleqtd = ft.TextField(width=50)
+                    femaleqtd = ft.TextField(width=50)
+
+                    widgets = ft.Column([ft.Row([ft.Text("ID do cliente:"), idclient], expand=True), ft.Column([ft.Text("Nome do cliente:"), nameclient]), ft.Column([ft.Text("QTD. Masculino:"), ft.IconButton(ft.icons.REMOVE_CIRCLE), maleqtd, ft.IconButton(ft.icons.ADD_CIRCLE
+                    )], expand=True), ft.Column([ft.Text("QTD. Feminino:"), ft.IconButton(ft.icons.REMOVE_CIRCLE), femaleqtd, ft.IconButton(ft.icons.ADD_CIRCLE)])])
+                    page.add(widgets)
                 page.scroll = "always"
                 self.products = []
                 page.appbar = ft.AppBar(bgcolor="#efefef", title=ft.Text("COMANDA " + str(self.command)) ,actions=[ft.ElevatedButton(text="Voltar", on_click=initpage)])
@@ -198,7 +221,7 @@ class app():
                         column.controls.append(ft.Row(controls=[ft.Container(content=ft.Row(controls=[ft.Container(width=10, height=49), ft.Container(ft.Text(i[0]), expand=True), ft.Container(ft.Text(i[1], text_align="center"), width=100), ft.Container(ft.Text(i[2], text_align="center"), width=50), ft.Container(width=5, height=49)]), bgcolor="#c4c4c3", height=60, expand=True)]))
                         total = total + float(i[2])
                     column.controls.append(ft.Row(controls=[ft.Container(content=ft.Row(controls=[ft.Container(width=10, height=49), ft.Container(ft.Text("TOTAL:"), expand=True), ft.Container(width=100), ft.Container(ft.Text(total, text_align="center"), width=50), ft.Container(width=5, height=49)]), bgcolor="#c4c4c3", height=60, expand=True)]))
-                page.bottom_appbar = ft.BottomAppBar(bgcolor="#c4c4c3", content=ft.Row(controls=[ft.ElevatedButton("ADICIONAR", on_click=addpage)]))
+                page.bottom_appbar = ft.BottomAppBar(bgcolor="#c4c4c3", content=ft.Row(controls=[ft.ElevatedButton("Adicionar produto", on_click=addpage), ft.Container(expand=True), ft.ElevatedButton("Adicionar cliente", on_click=addclientpage)]))
                 page.add(column)
             page.appbar = ft.AppBar(bgcolor="#efefef", actions=[ft.ElevatedButton(text="Recarregar", on_click=initpage)])
             page.scroll = "always"
