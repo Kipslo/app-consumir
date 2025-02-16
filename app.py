@@ -182,27 +182,34 @@ class app():
 
                     page.add(sizesbutton)
                 def addclientpage(event):
-                    def addmale():
-                        maleqtd.value = maleqtd.value + 1
-                    def removemale():
-                        if maleqtd.value > 0: 
-                            maleqtd.value = maleqtd.value - 1
-                    def addfemale():
-                        femaleqtd.value = femaleqtd + 1
-                    def removefemale():
-                        if femaleqtd.value > 0:
-                            femaleqtd.value = femaleqtd.value - 1
+                    def addmale(x):
+                        maleqtd.value = str(int(maleqtd.value) + 1)
+                        maleqtd.update()
+                    def removemale(x):
+                        if int(maleqtd.value) > 0: 
+                            maleqtd.value = str(int(maleqtd.value) - 1)
+                            maleqtd.update()
+                    def addfemale(x):
+                        femaleqtd.value = str(int(femaleqtd.value) + 1)
+                        femaleqtd.update()
+                    def removefemale(x):
+                        if int(femaleqtd.value) > 0:
+                            femaleqtd.value = str(int(femaleqtd.value) - 1)
+                            femaleqtd.update()
+                    def sendclient(x):
+                        result = self.sendstr(f"INSERTCLIENT,={self.name},={self.password},={self.command},={idclient.value},={nameclient.value},={maleqtd.value},={femaleqtd.value}")
+                        
+                        commandpage()
                     page.clean()
                     page.bottom_appbar = []
                     page.appbar = ft.AppBar(bgcolor="#efefef", title=ft.Text("COMANDA " + str(self.command)) ,actions=[ft.ElevatedButton(text="Voltar", on_click=lambda x, y = number:commandpage(y))])
 
-                    idclient = ft.TextField(expand=True, value=0)
-                    nameclient = ft.TextField(expand=True, value=0)
-                    maleqtd = ft.TextField(width=50)
-                    femaleqtd = ft.TextField(width=50)
+                    idclient = ft.TextField(expand=True)
+                    nameclient = ft.TextField(expand=True)
+                    maleqtd = ft.TextField(width=50, value="0")
+                    femaleqtd = ft.TextField(width=50, value="0")
 
-                    widgets = ft.Column([ft.Row([ft.Text("ID do cliente:"), idclient], expand=True), ft.Column([ft.Text("Nome do cliente:"), nameclient]), ft.Column([ft.Text("QTD. Masculino:"), ft.IconButton(ft.icons.REMOVE_CIRCLE), maleqtd, ft.IconButton(ft.icons.ADD_CIRCLE
-                    )], expand=True), ft.Column([ft.Text("QTD. Feminino:"), ft.IconButton(ft.icons.REMOVE_CIRCLE), femaleqtd, ft.IconButton(ft.icons.ADD_CIRCLE)])])
+                    widgets = ft.Column([ft.Row([ft.Text("ID do cliente:"), idclient], expand=True), ft.Row([ft.Text("Nome do cliente:"), nameclient]), ft.Row([ft.Text("QTD. Masculino:", width=200), ft.IconButton(ft.icons.REMOVE_CIRCLE, on_click=removemale), maleqtd, ft.IconButton(ft.icons.ADD_CIRCLE, on_click=addmale)], expand=True), ft.Row([ft.Text("QTD. Feminino:", width=200, text_align='left'), ft.IconButton(ft.icons.REMOVE_CIRCLE, on_click=removefemale), femaleqtd, ft.IconButton(ft.icons.ADD_CIRCLE, on_click=addfemale)]), ft.Row([ft.Container(expand=True), ft.ElevatedButton(text="Enviar", width=200,on_click=sendclient), ft.Container(expand=True)])])
                     page.add(widgets)
                 page.scroll = "always"
                 self.products = []
