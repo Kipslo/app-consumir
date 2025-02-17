@@ -198,8 +198,8 @@ class app():
                             femaleqtd.update()
                     def sendclient(x):
                         result = self.sendstr(f"INSERTCLIENT,={self.name},={self.password},={self.command},={idclient.value},={nameclient.value},={maleqtd.value},={femaleqtd.value}")
-                        
-                        commandpage()
+
+                        commandpage(number)
                     page.clean()
                     page.bottom_appbar = []
                     page.appbar = ft.AppBar(bgcolor="#efefef", title=ft.Text("COMANDA " + str(self.command)) ,actions=[ft.ElevatedButton(text="Voltar", on_click=lambda x, y = number:commandpage(y))])
@@ -209,7 +209,7 @@ class app():
                     maleqtd = ft.TextField(width=50, value="0")
                     femaleqtd = ft.TextField(width=50, value="0")
 
-                    widgets = ft.Column([ft.Row([ft.Text("ID do cliente:"), idclient], expand=True), ft.Row([ft.Text("Nome do cliente:"), nameclient]), ft.Row([ft.Text("QTD. Masculino:", width=200), ft.IconButton(ft.icons.REMOVE_CIRCLE, on_click=removemale), maleqtd, ft.IconButton(ft.icons.ADD_CIRCLE, on_click=addmale)], expand=True), ft.Row([ft.Text("QTD. Feminino:", width=200, text_align='left'), ft.IconButton(ft.icons.REMOVE_CIRCLE, on_click=removefemale), femaleqtd, ft.IconButton(ft.icons.ADD_CIRCLE, on_click=addfemale)]), ft.Row([ft.Container(expand=True), ft.ElevatedButton(text="Enviar", width=200,on_click=sendclient), ft.Container(expand=True)])])
+                    widgets = ft.Column([ft.Row([ft.Text("ID do cliente:"), idclient], expand=True), ft.Row([ft.Text("Nome do cliente:"), nameclient]), ft.Row([ft.Text("QTD. Masculino:", expand=True), ft.IconButton(ft.icons.REMOVE_CIRCLE, on_click=removemale), maleqtd, ft.IconButton(ft.icons.ADD_CIRCLE, on_click=addmale)], expand=True), ft.Row([ft.Text("QTD. Feminino:", expand=True, text_align='left'), ft.IconButton(ft.icons.REMOVE_CIRCLE, on_click=removefemale), femaleqtd, ft.IconButton(ft.icons.ADD_CIRCLE, on_click=addfemale)]), ft.Row([ft.Container(expand=True), ft.ElevatedButton(text="Enviar", expand=True, on_click=sendclient), ft.Container(expand=True)])])
                     page.add(widgets)
                 page.scroll = "always"
                 self.products = []
