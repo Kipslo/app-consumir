@@ -5,8 +5,7 @@ description = ""
 readme = "README.md"
 requires-python = ">=3.8"
 dependencies = [
-  "flet==0.25.2",
-  "socket==*"
+  "flet==0.25.2"
 ]
 
 
@@ -27,6 +26,3 @@ copyright = "Copyright (C) 2024 by Flet"
 
 [tool.flet.app]
 path = "src"
-
-[tool.flet.android.permission] # --android-permissions
-"android.permission.INTERNET" = true
