@@ -42,6 +42,8 @@ class app():
                         del t
                         if tem == "":
                             alert = ft.Banner(bgcolor="#ff0000", content=ft.Text("PEDIDO ENVIADO COM SUCESSO", color="#000000"), actions=[ft.TextButton("OK", on_click=lambda x:page.close(alert))])
+                        else:
+                            alert = ft.Banner(bgcolor="#ff0000", content=ft.Text(tem, color="#000000"), actions=[ft.TextButton("OK", on_click=lambda x:page.close(alert))])
                         page.open(alert)
                         initpage()
                     def editt(i):
@@ -262,7 +264,7 @@ class app():
                     self.errorlogintext.value = "NOME E/OU SENHA INCORRETOS"
                     self.errorlogintext.update()
             except Exception as error:
-                    self.errorlogintext.value = error
+                    self.errorlogintext.value = "FALHA NA CONEXÃO"
                     self.errorlogintext.update()
         page.horizontal_alignment = "center"
         page.vertical_alignment = "center"
