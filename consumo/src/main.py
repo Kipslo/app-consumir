@@ -242,9 +242,9 @@ class app():
             for i in range(int(limitcommands)):
                 n = i + 1
                 if str(n) in opencommands:
-                    commands.controls.append(ft.ElevatedButton(text=str(n), on_click=lambda y, x = i + 1: commandpage(x), color="#000000", bgcolor="#dd0000", width=100,height=50))
+                    commands.controls.append(ft.ElevatedButton(content=ft.Text(str(n), color="#ffffff", size=25), on_click=lambda y, x = i + 1: commandpage(x),  bgcolor="#dd0000", width=100,height=50))
                 else:
-                    commands.controls.append(ft.ElevatedButton(text=str(n), on_click=lambda y, x = i + 1: commandpage(x), color="#000000", bgcolor="#00a000", width=100,height=50))
+                    commands.controls.append(ft.ElevatedButton(content=ft.Text(str(n), color="#ffffff", size=25), on_click=lambda y, x = i + 1: commandpage(x), color="#ffffff", bgcolor="#00a000", width=100,height=50))
             main = ft.Column([commands], horizontal_alignment="center")
             page.bottom_appbar = None
             page.add(main)
