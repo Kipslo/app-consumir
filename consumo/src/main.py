@@ -215,8 +215,11 @@ class app():
                     page.add(widgets)
                 page.scroll = "always"
                 self.products = []
-                page.appbar = ft.AppBar(bgcolor="#efefef", title=ft.Text("COMANDA " + str(self.command)) ,actions=[ft.ElevatedButton(text="Voltar", on_click=initpage)])
-                
+                self.clientname = self.sendstr("CLIENTNAME,=", str(self.command))
+                if self.client == "":
+                    page.appbar = ft.AppBar(bgcolor="#efefef", title=ft.Text("COMANDA " + str(self.command)) ,actions=[ft.ElevatedButton(text="Voltar", on_click=initpage)])
+                else:
+                    page.appbar = ft.AppBar(bgcolor="#efefef", title=ft.Text(f"{self.clientname} ({str(self.command)})") ,actions=[ft.ElevatedButton(text="Voltar", on_click=initpage)])
                 products = self.sendstr("PRODUCTSON,=" + str(self.command))
                 page.clean()
                 products = products.split(",=")
