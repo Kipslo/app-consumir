@@ -206,8 +206,8 @@ class app():
                     page.bottom_appbar = []
                     page.appbar = ft.AppBar(bgcolor="#efefef", title=ft.Text("COMANDA " + str(self.command)) ,actions=[ft.ElevatedButton(text="Voltar", on_click=lambda x, y = number:commandpage(y))])
 
-                    idclient = ft.TextField(expand=True)
-                    nameclient = ft.TextField(expand=True)
+                    idclient = ft.TextField(expand=True, value=self.idclient)
+                    nameclient = ft.TextField(expand=True, value=self.clientname)
                     maleqtd = ft.TextField(width=50, value="0")
                     femaleqtd = ft.TextField(width=50, value="0")
 
@@ -215,8 +215,8 @@ class app():
                     page.add(widgets)
                 page.scroll = "always"
                 self.products = []
-                self.clientname = self.sendstr("CLIENTNAME,=", str(self.command))
-                if self.client == "":
+                self.clientname, self.idclient = self.sendstr("CLIENTNAME,=" + str(self.command)).split()
+                if self.clientname == "":
                     page.appbar = ft.AppBar(bgcolor="#efefef", title=ft.Text("COMANDA " + str(self.command)) ,actions=[ft.ElevatedButton(text="Voltar", on_click=initpage)])
                 else:
                     page.appbar = ft.AppBar(bgcolor="#efefef", title=ft.Text(f"{self.clientname} ({str(self.command)})") ,actions=[ft.ElevatedButton(text="Voltar", on_click=initpage)])
