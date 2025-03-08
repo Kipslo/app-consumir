@@ -215,7 +215,10 @@ class app():
                     page.add(widgets)
                 page.scroll = "always"
                 self.products = []
-                self.clientname, self.idclient = self.sendstr("CLIENTNAME,=" + str(self.command)).split()
+                try:
+                    self.clientname, self.idclient = self.sendstr("CLIENTNAME,=" + str(self.command)).split(",=")
+                except:
+                    self.clientname, self.idclient = "", ""
                 if self.clientname == "":
                     page.appbar = ft.AppBar(bgcolor="#efefef", title=ft.Text("COMANDA " + str(self.command)) ,actions=[ft.ElevatedButton(text="Voltar", on_click=initpage)])
                 else:
