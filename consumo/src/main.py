@@ -22,7 +22,11 @@ class app():
                         tem = ""
                         for i in self.products:
                             name, category, unitprice, qtd, texts, tipe, prynter = i
-                            data = f"INSERT,={self.command},={self.name},={self.password},="
+                            data = f"INSERT,={self.command}"
+                            for i in self.divisioncommands.split(","):    
+                                data = data + f".={i}"
+                            
+                            data = data + f",={self.name},={self.password},="
                             if texts == "":
                                 data = data + f"{name}.-{category}.-{unitprice}.-{qtd}.-{tipe}.-{prynter}"
                             else:
@@ -36,6 +40,7 @@ class app():
                                         data = data + f".={j}"
                                 data = data + f".-{tipe}.-{prynter}"
                                 
+                            print(data)
                             t = self.sendstr(data)
                             if t != "Y":
                                 tem = t
@@ -117,18 +122,18 @@ class app():
                     def delete(i):
                         del self.products[i]
                         reviewpage()
-                    def divisionpage():
-                        def confirn():
+                    def divisionpage(event):
+                        def confirm(event):
                             
 
-                            self.divissioncommands = self.divisionentry.value
+                            self.divisioncommands = str(divisionentry.value)
                             reviewpage()
                         page.clean()
 
                         page.appbar = ft.AppBar(bgcolor="#efefef", title=ft.Text("Dividir produtos da comanda " + str(self.command)))
-                        page.bottom_appbar = ft.BottomAppBar(content=ft.Row(controls=[ft.ElevatedButton("VOLTAR", on_click=reviewpage), ft.Container(expand=True), ft.ElevatedButton("CONFIRMAR", on_click=confirn)]))
+                        page.bottom_appbar = ft.BottomAppBar(content=ft.Row(controls=[ft.ElevatedButton("VOLTAR", on_click=reviewpage), ft.Container(expand=True), ft.ElevatedButton("CONFIRMAR", on_click=confirm)]))
 
-                        divisionentry = ft.TextField(self.divisionentry)
+                        divisionentry = ft.TextField(value=self.divisioncommands)
 
                         divisionrow = ft.Row([divisionentry, ft.TextButton()])
 
@@ -139,7 +144,6 @@ class app():
                     page.appbar = ft.AppBar(bgcolor="#efefef", title=ft.Text("Comanda " + str(self.command)), actions=[ft.ElevatedButton("Dividir", on_click=divisionpage)])
                     page.bottom_appbar = ft.BottomAppBar(content=ft.Row(controls=[ft.ElevatedButton("VOLTAR", on_click=addpage), ft.Container(expand=True), ft.ElevatedButton("ENVIAR", on_click=lambda x:send())]))
 
-                    self.divisionentry = ""
 
                     rows.append(ft.Row(controls=[ft.Container(content=ft.Row([ft.Container(expand=True, width=100, height=49, content=ft.Text("PRODUTO", text_align="center")), ft.Container(expand=True, width=100, height=49, content=ft.Text("CATEGORIA", text_align="center")), ft.Container(expand=True, width=30, height=49, content=ft.Text("QTD.", text_align="center"))]), bgcolor="#c4c4c3", height=50, expand=True)]))
                     
@@ -247,6 +251,7 @@ class app():
                 for k, i in enumerate(products):
                     products[k] = i.split("|")
                 column = ft.Column(spacing=2)
+                self.divisioncommands = ""
                 column.controls.append(ft.Row(controls=[ft.Container(content=ft.Row(controls=[ft.Container(width=10, height=49), ft.Container(ft.Text("PRODUTO"), expand=True), ft.Container(ft.Text("QUANTIDADE", text_align="center"), width=100), ft.Container(ft.Text("PREÇO", text_align="center"), width=50), ft.Container(width=5, height=49)]), bgcolor="c4c4c3", height=60, expand=True)]))
                 if products != [[""]]:
                     total = 0.0
