@@ -170,13 +170,9 @@ class app():
                     if productscategory[0][0] != '':
                         for i in productscategory:
                             if i[1] != "SIZE":
-                                vcategorypage.controls.append(ft.Container(content=ft.TextButton(text=f"""{i[0]}
-
-                                {i[2]}""", width=150, height=75, on_click=lambda x, y = i[0], z = i[2], a = i[1], b = i[3]:addproductlist(y, z, a, b)), bgcolor="#c4c4c3", width=150, height=75))
+                                vcategorypage.controls.append(ft.Container(content=ft.CupertinoButton(content=ft.Column([ft.Text(i[0], text_align="left"), ft.Text(i[2], text_align="right")], width=150, height=75), width=150, height=75, on_click=lambda x, y = i[0], z = i[2], a = i[1], b = i[3]:addproductlist(y, z, a, b)), bgcolor="#c4c4c3", width=150, height=75))
                             else: 
-                                vcategorypage.controls.append(ft.Container(content=ft.TextButton(text=f"""{i[0]}
-                            
-                                """, width=150, height=75, on_click=lambda x, y = i[0], z = i[3]: sizepage(y, z)), bgcolor="#c4c4c3", width=150, height=75))
+                                vcategorypage.controls.append(ft.Container(content=ft.CupertinoButton(content=ft.Column([ft.Text(i[0], text_align="left")], width=150, height=75), width=150, height=75, on_click=lambda x, y = i[0], z = i[3]: sizepage(y, z)), bgcolor="#c4c4c3", width=150, height=75))
                     page.bottom_appbar = ft.BottomAppBar(content=ft.Row(controls=[ft.ElevatedButton("VOLTAR", on_click=addpage), ft.Container(expand=True), ft.ElevatedButton("REVISAR", on_click=reviewpage)]))                        
                     page.add(vcategorypage)    
                 def addproductlist(product, unitprice, tipe, prynter):
