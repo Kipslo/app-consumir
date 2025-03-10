@@ -117,11 +117,29 @@ class app():
                     def delete(i):
                         del self.products[i]
                         reviewpage()
+                    def divisionpage():
+                        def confirn():
+                            
+
+                            self.divissioncommands = self.divisionentry.value
+                            reviewpage()
+                        page.clean()
+
+                        page.appbar = ft.AppBar(bgcolor="#efefef", title=ft.Text("Dividir produtos da comanda " + str(self.command)))
+                        page.bottom_appbar = ft.BottomAppBar(content=ft.Row(controls=[ft.ElevatedButton("VOLTAR", on_click=reviewpage), ft.Container(expand=True), ft.ElevatedButton("CONFIRMAR", on_click=confirn)]))
+
+                        divisionentry = ft.TextField(self.divisionentry)
+
+                        divisionrow = ft.Row([divisionentry, ft.TextButton()])
+
+                        page.add(divisionrow)
                     page.clean()
                     rows = []
                     page.spacing = 0
-                    page.appbar = ft.AppBar(bgcolor="#efefef", title=ft.Text("Comanda " + str(self.command)))
+                    page.appbar = ft.AppBar(bgcolor="#efefef", title=ft.Text("Comanda " + str(self.command)), actions=[ft.ElevatedButton("Dividir", on_click=divisionpage)])
                     page.bottom_appbar = ft.BottomAppBar(content=ft.Row(controls=[ft.ElevatedButton("VOLTAR", on_click=addpage), ft.Container(expand=True), ft.ElevatedButton("ENVIAR", on_click=lambda x:send())]))
+
+                    self.divisionentry = ""
 
                     rows.append(ft.Row(controls=[ft.Container(content=ft.Row([ft.Container(expand=True, width=100, height=49, content=ft.Text("PRODUTO", text_align="center")), ft.Container(expand=True, width=100, height=49, content=ft.Text("CATEGORIA", text_align="center")), ft.Container(expand=True, width=30, height=49, content=ft.Text("QTD.", text_align="center"))]), bgcolor="#c4c4c3", height=50, expand=True)]))
                     
