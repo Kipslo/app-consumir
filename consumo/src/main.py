@@ -173,7 +173,7 @@ class app():
                             if i[1] != "SIZE":
                                 vcategorypage.controls.append(ft.Container(content=ft.CupertinoButton(content=ft.Column([ft.Text(i[0], text_align=ft.alignment.top_left, ), ft.Text(i[2], text_align=ft.alignment.bottom_right)], width=150, height=100), width=150, height=100, on_click=lambda x, y = i[0], z = i[2], a = i[1], b = i[3]:addproductlist(y, z, a, b)), bgcolor="#c4c4c3", width=150, height=100, margin=0, padding=0))
                             else: 
-                                vcategorypage.controls.append(ft.Container(content=ft.CupertinoButton(content=ft.Column([ft.Text(i[0], text_align=ft.alignment.top_left)], width=150, height=100), width=150, height=100, on_click=lambda x, y = i[0], z = i[3]: sizepage(y, z)), bgcolor="#c4c4c3", width=150, height=100), margin=10, padding=10)
+                                vcategorypage.controls.append(ft.Container(content=ft.CupertinoButton(content=ft.Column([ft.Text(i[0], text_align=ft.alignment.top_left)], width=150, height=100), width=150, height=100, on_click=lambda x, y = i[0], z = i[3]: sizepage(y, z)), bgcolor="#c4c4c3", width=150, height=100, margin=0, padding=0))
                     page.bottom_appbar = ft.BottomAppBar(content=ft.Row(controls=[ft.ElevatedButton("VOLTAR", on_click=addpage), ft.Container(expand=True), ft.ElevatedButton("REVISAR", on_click=reviewpage)]))                        
                     page.add(vcategorypage)    
                 def addproductlist(product, unitprice, tipe, prynter):
@@ -263,6 +263,7 @@ class app():
             limitcommands = (self.sendstr("LIMITCOMMANDS"))
             opencommands = self.sendstr("OPENCOMMANDS")
             page.clean()
+            
             opencommands = opencommands.split(",=")
             commands = ft.Row(wrap=True)
             for i in range(int(limitcommands)):
@@ -278,7 +279,7 @@ class app():
         def login(event):
             data = ""
             try:
-                self.HOST = self.entry_ip.value
+                self.HOST = socket.gethostbyname(socket.gethostname())
                 data = self.sendstr("LOGIN,=" + self.entry_name.value + ",=" + self.entry_password.value)
                 data = data
                 if data == "YES":
