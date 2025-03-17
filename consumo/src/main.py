@@ -14,8 +14,9 @@ class app():
         return data.decode()
     
     def main(self, page: ft.Page):
-        def initpage(event = 0):
+        def initpage(event = 0, nownumber = -1):
             def commandpage(number):
+                del self.commands
                 self.command = number
                 def reviewpage(event = 0):
                     def send():
@@ -258,28 +259,59 @@ class app():
                     column.controls.append(ft.Row(controls=[ft.Container(content=ft.Row(controls=[ft.Container(width=10, height=49), ft.Container(ft.Text("TOTAL:"), expand=True), ft.Container(width=100), ft.Container(ft.Text(total, text_align="center"), width=50), ft.Container(width=5, height=49)]), bgcolor="#c4c4c3", height=60, expand=True)]))
                 page.bottom_appbar = ft.BottomAppBar(bgcolor="#c4c4c3", content=ft.Row(controls=[ft.ElevatedButton("ADD produto", on_click=addpage), ft.Container(expand=True), ft.ElevatedButton("ADD cliente", on_click=addclientpage)]))
                 page.add(column)
-            page.appbar = ft.AppBar(bgcolor="#efefef", actions=[ft.ElevatedButton(text="Recarregar", on_click=initpage)])
-            page.scroll = "always"
-            limitcommands = (self.sendstr("LIMITCOMMANDS"))
-            opencommands = self.sendstr("OPENCOMMANDS")
-            page.clean()
+            try:
+                self.commands.controls[0]
             
-            opencommands = opencommands.split(",=")
-            commands = ft.Row(wrap=True)
-            for i in range(int(limitcommands)):
-                n = i + 1
-                if str(n) in opencommands:
-                    commands.controls.append(ft.ElevatedButton(content=ft.Text(str(n), color="#ffffff", size=25), on_click=lambda y, x = i + 1: commandpage(x),  bgcolor="#dd0000", width=100,height=50))
+                opencommands = self.sendstr("OPENCOMMANDS")
+
+                
+                opencommands = opencommands.split(",=")
+                for i in self.tempcommandred:
+                    self.commandslist[i].bgcolor = "#00a000"
+                self.tempcommandred = []
+                
+                for i in opencommands:
+                    number = int(i)
+                    self.commandslist[number].bgcolor = "#dd0000"
+                    self.tempcommandred.append(number)
+                
+                page.clean()
+                if nownumber == -1:
+                    self.commands.controls = self.commandsgroup
                 else:
-                    commands.controls.append(ft.ElevatedButton(content=ft.Text(str(n), color="#ffffff", size=25), on_click=lambda y, x = i + 1: commandpage(x), color="#ffffff", bgcolor="#00a000", width=100,height=50))
-            main = ft.Column([commands], horizontal_alignment="center")
-            page.bottom_appbar = None
-            page.add(main)
+                    self.commands.controls = self.commandslist[nownumber*30:(nownumber + 1)*30]
+
+                page.add(self.commands)
+            except:
+                page.appbar = ft.AppBar(bgcolor="#efefef", actions=[ft.ElevatedButton(text="Recarregar", on_click=initpage)])
+                page.clean()
+                self.commands = ft.Row(wrap=True)
+                self.commandslist = []
+                limitcommands = self.sendstr("LIMITCOMMANDS")
+                page.scroll = "always"
+                for i in range(int(limitcommands)):
+                    n = i + 1
+                    self.commandslist.append(ft.Container(content=ft.Text(str(n), color="#ffffff", size=25, text_align="center"), on_click=lambda y, x = n: commandpage(x), width=100,height=50, bgcolor="#00a000"))
+                self.tempcommandred = []
+                opencommands = self.sendstr("OPENCOMMANDS").split(",=")
+                page.bottom_appbar = None
+                for i in opencommands:
+                    number = int(i)
+                    self.commandslist[number].bgcolor = "#dd0000"
+                    self.tempcommandred.append(number)
+                self.commandsgroup = []
+                for i in range(int(limitcommands)//30):
+                    self.commandsgroup.append(ft.Container(content=ft.Text(f"{i*30 + 1} - {(i+1)*30}", color="#ffffff", size=25, text_align="center"), on_click=lambda y, x = i: initpage(nownumber=x), width=130,height=40, bgcolor="#00a000"))
+                if int(limitcommands) % 30 != 0:
+                    self.commandsgroup.append(ft.Container(content=ft.Text(f"{int(limitcommands) - int(limitcommands)%30 + 1} - {int(limitcommands)}", color="#ffffff", size=25, text_align="center"), on_click=lambda y, x = int(limitcommands)//30: initpage(nownumber=x), width=130,height=40, bgcolor="#00a000"))
+                self.commands.controls = self.commandsgroup
+                page.add(self.commands)
+            
         
         def login(event):
             data = ""
             try:
-                self.HOST = socket.gethostbyname(socket.gethostname())
+                self.HOST = self.entry_ip.value
                 data = self.sendstr("LOGIN,=" + self.entry_name.value + ",=" + self.entry_password.value)
                 data = data
                 if data == "YES":
@@ -291,6 +323,7 @@ class app():
                     self.errorlogintext.value = "NOME E/OU SENHA INCORRETOS"
                     self.errorlogintext.update()
             except Exception as error:
+                    print(error)
                     self.errorlogintext.value = "FALHA NA CONEXÃO"
                     self.errorlogintext.update()
         page.horizontal_alignment = "center"
