@@ -16,7 +16,6 @@ class app():
     def main(self, page: ft.Page):
         def initpage(event = 0, nownumber = -1):
             def commandpage(number):
-                del self.commands
                 self.command = number
                 def reviewpage(event = 0):
                     def send():
@@ -259,6 +258,9 @@ class app():
                     column.controls.append(ft.Row(controls=[ft.Container(content=ft.Row(controls=[ft.Container(width=10, height=49), ft.Container(ft.Text("TOTAL:"), expand=True), ft.Container(width=100), ft.Container(ft.Text(total, text_align="center"), width=50), ft.Container(width=5, height=49)]), bgcolor="#c4c4c3", height=60, expand=True)]))
                 page.bottom_appbar = ft.BottomAppBar(bgcolor="#c4c4c3", content=ft.Row(controls=[ft.ElevatedButton("ADD produto", on_click=addpage), ft.Container(expand=True), ft.ElevatedButton("ADD cliente", on_click=addclientpage)]))
                 page.add(column)
+            
+            page.appbar = ft.AppBar(bgcolor="#efefef", actions=[ft.ElevatedButton(text="Recarregar", on_click=initpage)])
+            page.bottom_appbar = None
             try:
                 self.commands.controls[0]
             
@@ -283,7 +285,6 @@ class app():
 
                 page.add(self.commands)
             except:
-                page.appbar = ft.AppBar(bgcolor="#efefef", actions=[ft.ElevatedButton(text="Recarregar", on_click=initpage)])
                 page.clean()
                 self.commands = ft.Row(wrap=True)
                 self.commandslist = []
