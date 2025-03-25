@@ -203,34 +203,42 @@ class app():
 
                     page.add(sizesbutton)
                 def addclientpage(event):
-                    def addmale(x):
-                        maleqtd.value = str(int(maleqtd.value) + 1)
-                        maleqtd.update()
-                    def removemale(x):
-                        if int(maleqtd.value) > 0: 
-                            maleqtd.value = str(int(maleqtd.value) - 1)
-                            maleqtd.update()
-                    def addfemale(x):
-                        femaleqtd.value = str(int(femaleqtd.value) + 1)
-                        femaleqtd.update()
-                    def removefemale(x):
-                        if int(femaleqtd.value) > 0:
-                            femaleqtd.value = str(int(femaleqtd.value) - 1)
-                            femaleqtd.update()
+                    def add(x):
+                        entriesentry[x][0].value = str(int(entriesentry[x][0].value) + 1)
+                        entriesentry[x][0].update()
+                    def remove(x):
+                        if int(entriesentry[x][0].value) > 0: 
+                            entriesentry[x][0].value = str(int(entriesentry[x][0].value) - 1)
+                            entriesentry[x][0].update()
                     def sendclient(x):
-                        result = self.sendstr(f"INSERTCLIENT,={self.name},={self.password},={self.command},={idclient.value},={nameclient.value},={maleqtd.value},={femaleqtd.value}")
-
+                        text = f"INSERTCLIENT,={self.name},={self.password},={self.command},={idclient.value},={nameclient.value}"
+                        n = 0
+                        for i in entriesentry:
+                            if int(i[0].value) > 0:
+                                if n != 0:
+                                    text = text + f";={i[1]}.={i[0].value}"
+                                else:
+                                    text = text + f",={i[1]}.={i[0].value}"
+                                    n = 1
+                        result = self.sendstr(text)
                         commandpage(number)
                     page.clean()
+
+                    entries = self.sendstr("ENTRIES").split(".=")
+
                     page.bottom_appbar = []
                     page.appbar = ft.AppBar(bgcolor="#efefef", title=ft.Text("COMANDA " + str(self.command)) ,actions=[ft.ElevatedButton(text="Voltar", on_click=lambda x, y = number:commandpage(y))])
 
                     idclient = ft.TextField(expand=True, value=self.idclient)
                     nameclient = ft.TextField(expand=True, value=self.clientname)
-                    maleqtd = ft.TextField(width=50, value="0")
-                    femaleqtd = ft.TextField(width=50, value="0")
 
-                    widgets = ft.Column([ft.Row([ft.Text("ID do cliente:"), idclient], expand=True), ft.Row([ft.Text("Nome do cliente:"), nameclient]), ft.Row([ft.Text("QTD. Masculino:", expand=True), ft.IconButton(ft.icons.REMOVE_CIRCLE, on_click=removemale), maleqtd, ft.IconButton(ft.icons.ADD_CIRCLE, on_click=addmale)], expand=True), ft.Row([ft.Text("QTD. Feminino:", expand=True, text_align='left'), ft.IconButton(ft.icons.REMOVE_CIRCLE, on_click=removefemale), femaleqtd, ft.IconButton(ft.icons.ADD_CIRCLE, on_click=addfemale)]), ft.Row([ft.Container(expand=True), ft.ElevatedButton(text="Enviar", expand=True, on_click=sendclient), ft.Container(expand=True)])])
+                    widgets = ft.Column([ft.Row([ft.Text("ID do cliente:"), idclient], expand=True), ft.Row([ft.Text("Nome do cliente:"), nameclient])])
+                    entriesentry = []
+                    for k, i in enumerate(entries):
+                        entry = i.split(",=")
+                        entriesentry.append([ft.TextField(width=50, value="0"), entry[1]])
+                        widgets.controls.append(ft.Row([ft.Text(f"QTD. {entry[1]}:", expand=True), ft.IconButton(ft.icons.REMOVE_CIRCLE, on_click=lambda x , y = k:remove(y)), entriesentry[k][0], ft.IconButton(ft.icons.ADD_CIRCLE, on_click=lambda x , y = k:add(y))], expand=True))
+                    widgets.controls.append(ft.Row([ft.Container(expand=True), ft.ElevatedButton(text="Enviar", expand=True, on_click=sendclient), ft.Container(expand=True)]))
                     page.add(widgets)
                 page.scroll = "always"
                 self.products = []
@@ -271,11 +279,11 @@ class app():
                 for i in self.tempcommandred:
                     self.commandslist[i].bgcolor = "#00a000"
                 self.tempcommandred = []
-                
-                for i in opencommands:
-                    number = int(i)
-                    self.commandslist[number].bgcolor = "#dd0000"
-                    self.tempcommandred.append(number)
+                if opencommands != ['']:
+                    for i in opencommands:
+                        number = int(i)
+                        self.commandslist[number].bgcolor = "#dd0000"
+                        self.tempcommandred.append(number)
                 
                 page.clean()
                 if nownumber == -1:
@@ -296,10 +304,11 @@ class app():
                 self.tempcommandred = []
                 opencommands = self.sendstr("OPENCOMMANDS").split(",=")
                 page.bottom_appbar = None
-                for i in opencommands:
-                    number = int(i)
-                    self.commandslist[number].bgcolor = "#dd0000"
-                    self.tempcommandred.append(number)
+                if opencommands != ['']:
+                    for i in opencommands:
+                        number = int(i)
+                        self.commandslist[number].bgcolor = "#dd0000"
+                        self.tempcommandred.append(number)
                 self.commandsgroup = []
                 for i in range(int(limitcommands)//30):
                     self.commandsgroup.append(ft.Container(content=ft.Text(f"{i*30 + 1} - {(i+1)*30}", color="#ffffff", size=25, text_align="center"), on_click=lambda y, x = i: initpage(nownumber=x), width=130,height=40, bgcolor="#00a000"))
@@ -323,8 +332,7 @@ class app():
                 elif data == "NOT":
                     self.errorlogintext.value = "NOME E/OU SENHA INCORRETOS"
                     self.errorlogintext.update()
-            except Exception as error:
-                    print(error)
+            except:
                     self.errorlogintext.value = "FALHA NA CONEXÃO"
                     self.errorlogintext.update()
         page.horizontal_alignment = "center"
