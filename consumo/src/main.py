@@ -115,7 +115,7 @@ class app():
 
                     def add1(i):
                         self.products[i][3] = self.products[i][3] + 1
-                        reviewpage()
+
                     def remove1(i):
                         if self.products[i][3] > 1:
                             self.products[i][3] = self.products[i][3] - 1
