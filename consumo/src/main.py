@@ -179,9 +179,11 @@ class app():
                 def addproductlist(product, unitprice, tipe, prynter):
                     self.products.append([product, self.category, unitprice, 1, [], tipe, prynter])
                 def addpage(event):
-                    pdt = self.sendstr("CATEGORIES")
+                    pdt2 = self.sendstr("CATEGORIES").split(",=")
                     page.clean()
-                    pdt = pdt.split(",=")
+                    pdt = []
+                    for i in pdt2:
+                        pdt.append(i.split(".=")[1])
                     vaddpage = ft.Row(wrap=True, spacing=10)
                     page.appbar = ft.AppBar(bgcolor="#efefef", title=ft.Text("COMANDA " + str(self.command)))
                     page.bottom_appbar = ft.BottomAppBar(content=ft.Row(controls=[ft.ElevatedButton("VOLTAR", on_click=lambda x, y = self.command:(commandpage(y))), ft.Container(expand=True), ft.ElevatedButton("REVISAR", on_click=reviewpage)]))
